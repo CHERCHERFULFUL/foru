@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Neon Precision Ball</title>
-    <!-- Tailwind CSS CDN -->
+    <title>A Special Message for You ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Modern Mobile & iPhone 13 Safe Area Rules */
         :root {
             --sat: env(safe-area-inset-top);
             --sab: env(safe-area-inset-bottom);
@@ -15,867 +14,488 @@
             --sar: env(safe-area-inset-right);
         }
 
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            height: 100svh; /* Dynamic viewport height for iOS Safari */
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #090a0f;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            touch-action: none; /* Prevents default iOS gestures, pulls, and double-tap zooms */
-        }
-
-        /* Prevent default iOS Safari bounce and scroll */
         body {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
+            font-family: 'Nunito', sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffe5ec 0%, #f0e6ff 50%, #fff0f5 100%);
             padding-top: var(--sat);
             padding-bottom: var(--sab);
             padding-left: var(--sal);
             padding-right: var(--sar);
         }
 
-        /* Glassmorphism Styling */
-        .glass-panel {
-            background: rgba(18, 24, 38, 0.75);
+        .font-handwriting {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(255, 182, 193, 0.4),
+                        0 0 20px rgba(255, 255, 255, 0.8) inset;
         }
 
-        /* Neon Glow Effects */
-        .glow-cyan {
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
-        }
-        .glow-pink {
-            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+        /* Floating animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
         }
 
-        /* Pulsing animations */
-        @keyframes heartPulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #ec4899); }
-            50% { transform: scale(1.25); filter: drop-shadow(0 0 25px #ec4899); }
-        }
-        .animate-heart {
-            animation: heartPulse 1.2s infinite ease-in-out;
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.4)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 18px rgba(255, 105, 180, 0.8)); }
         }
 
-        @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(1000%); }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.15); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
         }
-        .scanline {
-            animation: scanline 8s linear infinite;
+
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        .animate-heartbeat {
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        /* Cute Button Press Effect */
+        .cute-btn {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translate3d(0, 0, 0);
+        }
+        .cute-btn:active {
+            transform: scale(0.92) translate3d(0, 0, 0);
+        }
+
+        /* Envelope Flap animation */
+        .envelope-flap {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top;
+        }
+
+        .envelope-open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        /* Smooth canvas background */
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-white flex flex-col items-center justify-between overflow-hidden">
+<body class="w-screen h-screen flex flex-col items-center justify-between text-gray-700 relative select-none">
 
-    <!-- Top Overlay Header -->
-    <header class="w-full px-4 pt-3 pb-2 flex items-center justify-between z-10 glass-panel rounded-b-2xl max-w-lg mx-auto">
-        <div class="flex items-center space-x-2">
-            <span class="text-xs font-semibold tracking-wider text-cyan-400 uppercase">Stage</span>
-            <span id="level-display" class="text-lg font-bold text-white bg-cyan-950/80 px-2.5 py-0.5 rounded-lg border border-cyan-500/30">1/3</span>
-        </div>
-        
-        <div class="flex items-center space-x-3">
-            <button id="sound-btn" class="p-2 rounded-xl bg-slate-800/80 border border-slate-700/60 active:scale-95 transition" aria-label="Toggle Sound">
-                <svg id="sound-icon-on" class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/></svg>
-                <svg id="sound-icon-off" class="w-5 h-5 text-slate-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke-dasharray="2 2"/></svg>
-            </button>
-            <button id="restart-btn" class="p-2 rounded-xl bg-slate-800/80 border border-slate-700/60 active:scale-95 transition text-xs font-medium text-slate-300 flex items-center gap-1">
-                <svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                Retry
-            </button>
-        </div>
-    </header>
+    <!-- Particle Canvas for floating hearts & sparkles -->
+    <canvas id="particleCanvas"></canvas>
 
-    <!-- Main Game Viewport -->
-    <main id="game-container" class="relative w-full flex-1 flex items-center justify-center p-2 max-w-lg my-auto">
-        <!-- Canvas Element -->
-        <canvas id="gameCanvas" class="w-full h-full rounded-2xl glass-panel border border-cyan-500/20 shadow-2xl block"></canvas>
+    <!-- Top Floating Decor -->
+    <div class="z-10 mt-4 text-center px-4">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-md text-pink-500 text-xs font-bold tracking-wider uppercase shadow-sm border border-white/80 animate-pulse-glow">
+            💖 For Someone Extra Special 💖
+        </span>
+    </div>
 
-        <!-- Dynamic Control Hint Overlay -->
-        <div id="touch-hint" class="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-500">
-            <div class="bg-slate-900/90 border border-cyan-500/40 rounded-2xl p-4 text-center backdrop-blur-md max-w-[260px]">
-                <div class="w-10 h-10 mx-auto mb-2 rounded-full border-2 border-cyan-400 flex items-center justify-center animate-bounce">
-                    <div class="w-3 h-3 bg-cyan-400 rounded-full"></div>
-                </div>
-                <p class="text-xs text-cyan-200 font-medium">Touch & Drag anywhere to steer the neon ball</p>
-            </div>
-        </div>
+    <!-- Main Interactive Stage Container -->
+    <div class="z-10 w-full max-w-sm px-5 flex-1 flex flex-col items-center justify-center relative">
 
-        <!-- Heart Victory Modal / Overlay -->
-        <div id="win-modal" class="absolute inset-0 bg-slate-950/90 backdrop-blur-xl rounded-2xl flex flex-col items-center justify-center p-6 text-center z-30 opacity-0 pointer-events-none transition-all duration-700 transform scale-90">
-            <!-- Animated SVG Heart Icon -->
-            <div class="mb-4">
-                <svg class="w-24 h-24 text-pink-500 animate-heart" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        <!-- Stage 1: Tap to Start / Collect Hearts -->
+        <div id="stage1" class="w-full text-center flex flex-col items-center transition-all duration-500 transform opacity-100 scale-100">
+            <!-- Cute SVG Bears Illustration -->
+            <div class="w-44 h-44 my-4 animate-float relative cursor-pointer" onclick="handleBearTap(event)">
+                <svg viewBox="0 0 200 200" class="w-full h-full filter drop-shadow-md">
+                    <!-- Left Bear (Pink) -->
+                    <g transform="translate(20, 20)">
+                        <circle cx="45" cy="45" r="16" fill="#ffb6c1" />
+                        <circle cx="45" cy="45" r="9" fill="#ffdae0" />
+                        <circle cx="105" cy="45" r="16" fill="#ffb6c1" />
+                        <circle cx="105" cy="45" r="9" fill="#ffdae0" />
+                        <circle cx="75" cy="75" r="42" fill="#ffb6c1" />
+                        <!-- Face -->
+                        <ellipse cx="75" cy="85" rx="16" ry="12" fill="#ffffff" />
+                        <circle cx="75" cy="80" r="5" fill="#5c4033" />
+                        <circle cx="62" cy="72" r="4" fill="#5c4033" />
+                        <circle cx="88" cy="72" r="4" fill="#5c4033" />
+                        <!-- Blushes -->
+                        <circle cx="54" cy="82" r="6" fill="#ff6b81" opacity="0.5" />
+                        <circle cx="96" cy="82" r="6" fill="#ff6b81" opacity="0.5" />
+                    </g>
+                    <!-- Right Bear (Brown/Cream) -->
+                    <g transform="translate(65, 20)">
+                        <circle cx="45" cy="45" r="16" fill="#e6ccb2" />
+                        <circle cx="45" cy="45" r="9" fill="#f5ebe0" />
+                        <circle cx="105" cy="45" r="16" fill="#e6ccb2" />
+                        <circle cx="105" cy="45" r="9" fill="#f5ebe0" />
+                        <circle cx="75" cy="75" r="42" fill="#e6ccb2" />
+                        <!-- Face -->
+                        <ellipse cx="75" cy="85" rx="16" ry="12" fill="#ffffff" />
+                        <circle cx="75" cy="80" r="5" fill="#5c4033" />
+                        <circle cx="62" cy="72" r="4" fill="#5c4033" />
+                        <circle cx="88" cy="72" r="4" fill="#5c4033" />
+                        <!-- Blushes -->
+                        <circle cx="54" cy="82" r="6" fill="#ff85a1" opacity="0.5" />
+                        <circle cx="96" cy="82" r="6" fill="#ff85a1" opacity="0.5" />
+                    </g>
+                    <!-- Big Shared Heart -->
+                    <path d="M 100,120 C 100,120 70,85 50,105 C 35,120 55,145 100,175 C 145,145 165,120 150,105 C 130,85 100,120 100,120 Z" fill="#ff4d6d" class="animate-heartbeat" />
                 </svg>
             </div>
 
-            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-cyan-400 mb-3 tracking-wide">
-                VICTORY!
-            </h2>
+            <h2 class="text-2xl font-bold text-pink-600 mb-2 font-handwriting">A Little Surprise Ahead</h2>
+            <p class="text-sm text-gray-600 mb-6 px-4">Tap the magical button below to collect love and unlock your message!</p>
 
-            <!-- Dynamic Editable Message Container -->
-            <p id="win-message-text" class="text-base font-semibold text-slate-100 max-w-xs mb-6 leading-relaxed bg-slate-900/60 p-4 rounded-xl border border-pink-500/30 glow-pink">
-                <!-- Text loaded dynamically from JS constant -->
-            </p>
-
-            <button id="play-again-btn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-sm tracking-wider uppercase shadow-lg active:scale-95 transition border border-pink-300/30 glow-pink">
-                Play Again
+            <button onclick="goToStage2()" class="cute-btn bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold py-3.5 px-8 rounded-full shadow-lg shadow-pink-300/50 flex items-center justify-center space-x-2 text-base">
+                <span>Tap to Send Love</span>
+                <span class="text-lg">✨</span>
             </button>
         </div>
-    </main>
 
-    <!-- Bottom Touch Control Dock -->
-    <footer class="w-full px-4 pb-3 pt-1 text-center text-[10px] text-slate-500 uppercase tracking-widest max-w-lg mx-auto">
-        Neon Precision Physics • Mobile Touch Optimized
-    </footer>
+        <!-- Stage 2: Envelope Unwrap -->
+        <div id="stage2" class="w-full text-center flex flex-col items-center absolute inset-0 justify-center opacity-0 pointer-events-none transition-all duration-500 transform scale-95">
+            <div id="envelopeContainer" class="w-64 h-48 relative cursor-pointer my-6 cute-btn" onclick="openEnvelope()">
+                <!-- Envelope Body -->
+                <div class="absolute inset-0 bg-rose-200 rounded-2xl shadow-xl overflow-hidden border-2 border-white flex items-end justify-center">
+                    <!-- Envelope Fold Lines -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-rose-300/40 to-transparent"></div>
+                    <div class="w-0 h-0 border-l-[128px] border-l-transparent border-r-[128px] border-r-transparent border-b-[100px] border-b-rose-100 relative z-10"></div>
+                </div>
 
-    <!-- Game Logic Script -->
+                <!-- Letter Preview Inside -->
+                <div id="letterPaper" class="absolute left-4 right-4 top-4 bottom-4 bg-white rounded-lg shadow-inner p-3 flex flex-col items-center justify-center transition-all duration-700 transform translate-y-0 z-0">
+                    <div class="w-8 h-8 text-pink-400 mb-1">
+                        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>
+                    <p class="text-xs font-semibold text-gray-500">For My Special S</p>
+                </div>
+
+                <!-- Envelope Top Flap -->
+                <div id="envelopeFlap" class="absolute top-0 left-0 right-0 h-24 bg-rose-300 rounded-t-2xl origin-top transition-transform duration-500 border-t-2 border-white z-20 clip-path-triangle flex items-start justify-center pt-2">
+                    <!-- Heart Seal -->
+                    <div class="w-10 h-10 bg-red-400 rounded-full flex items-center justify-center shadow-md border-2 border-white">
+                        <span class="text-white text-sm">💌</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-sm font-semibold text-pink-500 animate-bounce mt-2">Tap the envelope to open 💌</p>
+        </div>
+
+        <!-- Stage 3: Final Card Reveal -->
+        <div id="stage3" class="w-full flex flex-col items-center absolute inset-0 justify-center opacity-0 pointer-events-none transition-all duration-700 transform scale-90">
+            <div class="glass-card w-full rounded-3xl p-6 text-center relative overflow-hidden border border-white/80 shadow-2xl">
+                <!-- Glowing Accent -->
+                <div class="absolute -top-10 -right-10 w-28 h-28 bg-pink-300/30 rounded-full blur-xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-28 h-28 bg-purple-300/30 rounded-full blur-xl pointer-events-none"></div>
+
+                <!-- Cute Decorative Header -->
+                <div class="flex items-center justify-center space-x-1 mb-3">
+                    <span class="text-xl">✨</span>
+                    <span class="text-xs font-bold tracking-widest text-pink-400 uppercase">My Dearest Note</span>
+                    <span class="text-xl">✨</span>
+                </div>
+
+                <!-- Love Message Text -->
+                <div class="my-4 py-2 px-1">
+                    <p class="text-lg md:text-xl font-bold text-gray-800 leading-relaxed font-handwriting tracking-wide">
+                        “Hey, my special S, my May, my 7th, I love you and just know that if you’re getting tired then I’m here with you and for you.”
+                    </p>
+                </div>
+
+                <!-- Cute Illustration Bottom -->
+                <div class="flex justify-center items-center space-x-2 my-2 text-pink-400">
+                    <span class="text-2xl animate-bounce">🌸</span>
+                    <span class="text-3xl animate-heartbeat">💖</span>
+                    <span class="text-2xl animate-bounce" style="animation-delay: 0.2s;">🌸</span>
+                </div>
+
+                <!-- Interactive Reaction Buttons -->
+                <div class="mt-5 grid grid-cols-2 gap-2.5">
+                    <button onclick="triggerHugs(event)" class="cute-btn bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center space-x-1 border border-pink-200">
+                        <span>Send Hugs</span>
+                        <span class="text-sm">🫂</span>
+                    </button>
+                    <button onclick="triggerSparkles(event)" class="cute-btn bg-purple-100 hover:bg-purple-200 text-purple-700 font-bold py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center space-x-1 border border-purple-200">
+                        <span>Sparkle Shower</span>
+                        <span class="text-sm">✨</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Footer Accent -->
+    <div class="z-10 mb-4 text-center">
+        <p class="text-xs text-pink-400 font-semibold tracking-wide">Always By Your Side 💕</p>
+    </div>
+
     <script>
-        /* ====================================================================
-           1. EDITABLE CONFIGURATION SECTION
-           ==================================================================== */
-        
-        // EDITABLE WIN MESSAGE HERE:
-        // Feel free to modify the string below to change the winning text!
-        const WIN_MESSAGE = "I love you a lot and I just wanted to tell you that you mean the world to me, you're my favorite person forever.";
+        /* Global Audio Context for Safari & iOS */
+        let audioCtx = null;
 
-        /* ====================================================================
-           2. AUDIO SYNTHESIS (Web Audio API - Safari Friendly)
-           ==================================================================== */
-        class SoundFX {
-            constructor() {
-                this.ctx = null;
-                this.enabled = true;
-            }
-
-            init() {
-                if (!this.ctx) {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    if (AudioContext) this.ctx = new AudioContext();
-                }
-                if (this.ctx && this.ctx.state === 'suspended') {
-                    this.ctx.resume();
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
                 }
             }
-
-            playBounce() {
-                if (!this.enabled || !this.ctx) return;
-                try {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(180, this.ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(60, this.ctx.currentTime + 0.08);
-                    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + 0.08);
-                } catch (e) {}
-            }
-
-            playCrash() {
-                if (!this.enabled || !this.ctx) return;
-                try {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(120, this.ctx.currentTime);
-                    osc.frequency.linearRampToValueAtTime(30, this.ctx.currentTime + 0.25);
-                    gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + 0.25);
-                } catch (e) {}
-            }
-
-            playWin() {
-                if (!this.enabled || !this.ctx) return;
-                try {
-                    const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
-                    notes.forEach((freq, idx) => {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = 'triangle';
-                        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.08);
-                        gain.gain.setValueAtTime(0.25, this.ctx.currentTime + idx * 0.08);
-                        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.08 + 0.3);
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.start(this.ctx.currentTime + idx * 0.08);
-                        osc.stop(this.ctx.currentTime + idx * 0.08 + 0.3);
-                    });
-                } catch (e) {}
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
-        const soundFX = new SoundFX();
+        /* Sound Effect Generator (Cute Chimes & Pops) */
+        function playCuteSound(type = 'pop') {
+            initAudio();
+            if (!audioCtx) return;
 
-        /* ====================================================================
-           3. GAME ENGINE & CANVAS SETUP
-           ==================================================================== */
-        const canvas = document.getElementById('gameCanvas');
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'pop') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'chime') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                    osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                } else if (type === 'hug') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(500, now + 0.15);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch (e) {
+                console.log('Audio playback prevented');
+            }
+        }
+
+        /* Canvas Particle Engine */
+        const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
-        const gameContainer = document.getElementById('game-container');
-        const levelDisplay = document.getElementById('level-display');
-        const touchHint = document.getElementById('touch-hint');
-        const winModal = document.getElementById('win-modal');
-        const winMessageText = document.getElementById('win-message-text');
-
-        // Set Editable Win Message Text
-        winMessageText.textContent = WIN_MESSAGE;
-
-        let canvasWidth = 360;
-        let canvasHeight = 640;
+        let particles = [];
 
         function resizeCanvas() {
-            const rect = gameContainer.getBoundingClientRect();
-            canvasWidth = Math.floor(rect.width);
-            canvasHeight = Math.floor(rect.height);
-            canvas.width = canvasWidth * window.devicePixelRatio;
-            canvas.height = canvasHeight * window.devicePixelRatio;
-            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        /* ====================================================================
-           4. GAME STATE & PHYSICS VARIABLES
-           ==================================================================== */
-        let currentLevelIndex = 0;
-        let isGameOver = false;
-        let isGameWon = false;
-        let touchStartPos = null;
-        let touchCurrentPos = null;
-        let particles = [];
-        let hintTimeout = null;
-
-        // Player physics object
-        const player = {
-            x: 50,
-            y: 50,
-            radius: 12,
-            vx: 0,
-            vy: 0,
-            ax: 0,
-            ay: 0,
-            friction: 0.97,
-            speedScale: 0.0028,
-            color: '#06b6d4'
-        };
-
-        /* ====================================================================
-           5. LEVEL DESIGNS (Deliberately Tough & Fast-paced)
-           ==================================================================== */
-        const levels = [
-            // LEVEL 1: The Warmup Laser Corridor
-            {
-                start: { x: 0.15, y: 0.15 },
-                goal: { x: 0.85, y: 0.85, radius: 24 },
-                walls: [
-                    { x: 0, y: 0, w: 1, h: 0.02 },
-                    { x: 0, y: 0.98, w: 1, h: 0.02 },
-                    { x: 0, y: 0, w: 0.02, h: 1 },
-                    { x: 0.98, y: 0, w: 0.02, h: 1 },
-                    { x: 0.35, y: 0, w: 0.04, h: 0.65 },
-                    { x: 0.65, y: 0.35, w: 0.04, h: 0.65 }
-                ],
-                lasers: [
-                    { x1: 0.4, y1: 0.75, x2: 0.64, y2: 0.75, speed: 2, offset: 0 },
-                    { x1: 0.02, y1: 0.4, x2: 0.34, y2: 0.4, speed: 2.5, offset: Math.PI }
-                ],
-                gears: [
-                    { x: 0.5, y: 0.2, radius: 0.08, speed: 0.04 }
-                ]
-            },
-            // LEVEL 2: Rotating Blades & Narrow Choke Points
-            {
-                start: { x: 0.1, y: 0.9 },
-                goal: { x: 0.9, y: 0.1, radius: 22 },
-                walls: [
-                    { x: 0, y: 0, w: 1, h: 0.02 },
-                    { x: 0, y: 0.98, w: 1, h: 0.02 },
-                    { x: 0, y: 0, w: 0.02, h: 1 },
-                    { x: 0.98, y: 0, w: 0.02, h: 1 },
-                    { x: 0.25, y: 0.25, w: 0.5, h: 0.03 },
-                    { x: 0.25, y: 0.75, w: 0.5, h: 0.03 }
-                ],
-                lasers: [
-                    { x1: 0.28, y1: 0.5, x2: 0.72, y2: 0.5, speed: 3.5, offset: 0 }
-                ],
-                gears: [
-                    { x: 0.18, y: 0.5, radius: 0.09, speed: 0.05 },
-                    { x: 0.82, y: 0.5, radius: 0.09, speed: -0.05 },
-                    { x: 0.5, y: 0.12, radius: 0.07, speed: 0.06 }
-                ]
-            },
-            // LEVEL 3: The Cyber Gauntlet (Hardcore)
-            {
-                start: { x: 0.1, y: 0.1 },
-                goal: { x: 0.5, y: 0.5, radius: 20 },
-                walls: [
-                    { x: 0, y: 0, w: 1, h: 0.02 },
-                    { x: 0, y: 0.98, w: 1, h: 0.02 },
-                    { x: 0, y: 0, w: 0.02, h: 1 },
-                    { x: 0.98, y: 0, w: 0.02, h: 1 },
-                    { x: 0.25, y: 0.25, w: 0.03, h: 0.5 },
-                    { x: 0.72, y: 0.25, w: 0.03, h: 0.5 }
-                ],
-                lasers: [
-                    { x1: 0.02, y1: 0.35, x2: 0.25, y2: 0.35, speed: 4, offset: 0 },
-                    { x1: 0.75, y1: 0.65, x2: 0.98, y2: 0.65, speed: 4.5, offset: Math.PI / 2 },
-                    { x1: 0.3, y1: 0.15, x2: 0.7, y2: 0.15, speed: 3, offset: Math.PI }
-                ],
-                gears: [
-                    { x: 0.5, y: 0.28, radius: 0.08, speed: 0.07 },
-                    { x: 0.5, y: 0.72, radius: 0.08, speed: -0.07 },
-                    { x: 0.32, y: 0.5, radius: 0.06, speed: 0.08 },
-                    { x: 0.68, y: 0.5, radius: 0.06, speed: -0.08 }
-                ]
+        class Particle {
+            constructor(x, y, type = 'heart') {
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || canvas.height + 20;
+                this.type = type; // 'heart', 'sparkle', 'star'
+                this.size = Math.random() * 14 + 10;
+                this.speedY = Math.random() * -1.8 - 0.8;
+                this.speedX = (Math.random() - 0.5) * 1.2;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.04;
+                this.opacity = 1;
+                this.fade = Math.random() * 0.008 + 0.003;
+                this.color = type === 'sparkle' 
+                    ? `hsl(${Math.random() * 40 + 40}, 100%, 70%)` 
+                    : `hsl(${Math.random() * 30 + 340}, 100%, 75%)`;
             }
-        ];
 
-        /* ====================================================================
-           6. INITIALIZATION & STAGE LOADING
-           ==================================================================== */
-        function loadLevel(levelIndex) {
-            currentLevelIndex = levelIndex;
-            const lvl = levels[currentLevelIndex];
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.02) + this.speedX;
+                this.rotation += this.rotSpeed;
+                this.opacity -= this.fade;
+            }
 
-            player.x = lvl.start.x * canvasWidth;
-            player.y = lvl.start.y * canvasHeight;
-            player.vx = 0;
-            player.vy = 0;
-            player.ax = 0;
-            player.ay = 0;
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = Math.max(0, this.opacity);
 
-            levelDisplay.textContent = `${currentLevelIndex + 1}/${levels.length}`;
-            isGameOver = false;
+                if (this.type === 'heart') {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    const topCurveHeight = this.size * 0.3;
+                    ctx.moveTo(0, topCurveHeight);
+                    // Heart Bezier curve
+                    ctx.bezierCurveTo(
+                        0, 0, 
+                        -this.size / 2, 0, 
+                        -this.size / 2, topCurveHeight
+                    );
+                    ctx.bezierCurveTo(
+                        -this.size / 2, (this.size + topCurveHeight) / 2, 
+                        0, this.size, 
+                        0, this.size
+                    );
+                    ctx.bezierCurveTo(
+                        0, this.size, 
+                        this.size / 2, (this.size + topCurveHeight) / 2, 
+                        this.size / 2, topCurveHeight
+                    );
+                    ctx.bezierCurveTo(
+                        this.size / 2, 0, 
+                        0, 0, 
+                        0, topCurveHeight
+                    );
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Four point sparkle
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    for (let i = 0; i < 4; i++) {
+                        ctx.lineTo(Math.cos((i * Math.PI) / 2) * this.size, Math.sin((i * Math.PI) / 2) * this.size);
+                        ctx.lineTo(Math.cos(((i + 0.5) * Math.PI) / 2) * (this.size / 3), Math.sin(((i + 0.5) * Math.PI) / 2) * (this.size / 3));
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                }
 
-            // Show touch hint briefly on level 1
-            if (currentLevelIndex === 0) {
-                touchHint.style.opacity = '1';
-                clearTimeout(hintTimeout);
-                hintTimeout = setTimeout(() => {
-                    touchHint.style.opacity = '0';
-                }, 3000);
-            } else {
-                touchHint.style.opacity = '0';
+                ctx.restore();
             }
         }
 
-        /* ====================================================================
-           7. TOUCH CONTROLS (Safari Mobile Optimized)
-           ==================================================================== */
-        function handleTouchStart(e) {
-            e.preventDefault(); // Prevents iOS Safari gestures/scrolls
-            soundFX.init();
-            
-            if (isGameWon) return;
-
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            touchStartPos = {
-                x: touch.clientX - rect.left,
-                y: touch.clientY - rect.top
-            };
-            touchCurrentPos = { ...touchStartPos };
-            touchHint.style.opacity = '0';
-        }
-
-        function handleTouchMove(e) {
-            e.preventDefault();
-            if (!touchStartPos || isGameWon) return;
-
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            touchCurrentPos = {
-                x: touch.clientX - rect.left,
-                y: touch.clientY - rect.top
-            };
-
-            // Calculate Drag Vector
-            const dx = touchCurrentPos.x - touchStartPos.x;
-            const dy = touchCurrentPos.y - touchStartPos.y;
-
-            // Set Acceleration based on touch drag displacement
-            player.ax = dx * player.speedScale;
-            player.ay = dy * player.speedScale;
-        }
-
-        function handleTouchEnd(e) {
-            e.preventDefault();
-            touchStartPos = null;
-            touchCurrentPos = null;
-            player.ax = 0;
-            player.ay = 0;
-        }
-
-        // Attach non-passive listeners specifically required for Safari touch stability
-        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-        canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
-        canvas.addEventListener('touchcancel', handleTouchEnd, { passive: false });
-
-        // Mouse fallback for browser testing
-        let isMouseDown = false;
-        canvas.addEventListener('mousedown', (e) => {
-            soundFX.init();
-            isMouseDown = true;
-            const rect = canvas.getBoundingClientRect();
-            touchStartPos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-            touchCurrentPos = { ...touchStartPos };
-        });
-        window.addEventListener('mousemove', (e) => {
-            if (!isMouseDown) return;
-            const rect = canvas.getBoundingClientRect();
-            touchCurrentPos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-            const dx = touchCurrentPos.x - touchStartPos.x;
-            const dy = touchCurrentPos.y - touchStartPos.y;
-            player.ax = dx * player.speedScale;
-            player.ay = dy * player.speedScale;
-        });
-        window.addEventListener('mouseup', () => {
-            isMouseDown = false;
-            touchStartPos = null;
-            touchCurrentPos = null;
-            player.ax = 0;
-            player.ay = 0;
-        });
-
-        /* ====================================================================
-           8. PARTICLES & CELEBRATION EFFECTS
-           ==================================================================== */
-        function spawnParticles(x, y, color, count = 15) {
-            for (let i = 0; i < count; i++) {
-                particles.push({
-                    x, y,
-                    vx: (Math.random() - 0.5) * 8,
-                    vy: (Math.random() - 0.5) * 8,
-                    radius: Math.random() * 4 + 2,
-                    color: color,
-                    alpha: 1,
-                    decay: Math.random() * 0.03 + 0.015
-                });
+        // Spawn ambient background floating hearts continuously
+        setInterval(() => {
+            if (particles.length < 35) {
+                particles.push(new Particle(null, null, Math.random() > 0.3 ? 'heart' : 'sparkle'));
             }
-        }
+        }, 300);
 
-        function spawnHeartConfetti() {
-            const colors = ['#ec4899', '#f43f5e', '#a855f7', '#3b82f6', '#06b6d4'];
-            for (let i = 0; i < 60; i++) {
-                particles.push({
-                    x: canvasWidth / 2,
-                    y: canvasHeight / 2,
-                    vx: (Math.random() - 0.5) * 12,
-                    vy: (Math.random() - 0.7) * 14,
-                    radius: Math.random() * 6 + 4,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    alpha: 1,
-                    decay: 0.008,
-                    isHeart: Math.random() > 0.4
-                });
-            }
-        }
-
-        function updateParticles() {
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= p.decay;
-                if (p.alpha <= 0) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].opacity <= 0 || particles[i].y < -50) {
                     particles.splice(i, 1);
                 }
             }
+            requestAnimationFrame(animateParticles);
+        }
+        requestAnimationFrame(animateParticles);
+
+        /* Touch & Click Burst Effects */
+        window.addEventListener('pointerdown', (e) => {
+            // Avoid triggering extra particles when tapping buttons directly to keep UI clean
+            if (e.target.tagName === 'BUTTON') return;
+            spawnBurst(e.clientX, e.clientY, 5);
+            playCuteSound('pop');
+        });
+
+        function spawnBurst(x, y, count = 8, type = 'heart') {
+            for (let i = 0; i < count; i++) {
+                const p = new Particle(x, y, type);
+                p.speedY = (Math.random() - 0.5) * 4 - 2;
+                p.speedX = (Math.random() - 0.5) * 4;
+                particles.push(p);
+            }
         }
 
-        function drawParticles() {
-            particles.forEach(p => {
-                ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                if (p.isHeart) {
-                    // Draw mini heart shape
-                    ctx.beginPath();
-                    const topCurveHeight = p.radius * 0.3;
-                    ctx.moveTo(p.x, p.y + topCurveHeight);
-                    ctx.bezierCurveTo(p.x, p.y, p.x - p.radius / 2, p.y, p.x - p.radius / 2, p.y + topCurveHeight);
-                    ctx.bezierCurveTo(p.x - p.radius / 2, p.y + (p.radius + topCurveHeight) / 2, p.x, p.y + p.radius, p.x, p.y + p.radius);
-                    ctx.bezierCurveTo(p.x, p.y + p.radius, p.x + p.radius / 2, p.y + (p.radius + topCurveHeight) / 2, p.x + p.radius / 2, p.y + topCurveHeight);
-                    ctx.bezierCurveTo(p.x + p.radius / 2, p.y, p.x, p.y, p.x, p.y + topCurveHeight);
-                    ctx.closePath();
-                    ctx.fill();
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                ctx.restore();
-            });
+        /* Interactive Transitions */
+        function handleBearTap(e) {
+            spawnBurst(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2, 10, 'heart');
+            playCuteSound('pop');
         }
 
-        /* ====================================================================
-           9. PHYSICS ENGINE & COLLISION DETECTION
-           ==================================================================== */
-        function triggerCrash() {
-            if (isGameOver) return;
-            isGameOver = true;
-            soundFX.playCrash();
-            spawnParticles(player.x, player.y, '#f43f5e', 25);
+        function goToStage2() {
+            playCuteSound('chime');
+            spawnBurst(window.innerWidth / 2, window.innerHeight / 2, 15, 'heart');
+
+            const s1 = document.getElementById('stage1');
+            const s2 = document.getElementById('stage2');
+
+            s1.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
             setTimeout(() => {
-                loadLevel(currentLevelIndex);
-            }, 350);
+                s1.classList.add('hidden');
+                s2.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+                s2.classList.add('opacity-100', 'scale-100');
+            }, 400);
         }
 
-        function updatePhysics() {
-            if (isGameOver || isGameWon) return;
+        function openEnvelope() {
+            playCuteSound('chime');
+            const flap = document.getElementById('envelopeFlap');
+            const letter = document.getElementById('letterPaper');
+            
+            // Flip Flap Open
+            flap.style.transform = 'rotateX(180deg)';
+            
+            // Slide Letter Up
+            setTimeout(() => {
+                letter.style.transform = 'translateY(-60px)';
+            }, 200);
 
-            // Apply Acceleration & Friction
-            player.vx += player.ax;
-            player.vy += player.ay;
-            player.vx *= player.friction;
-            player.vy *= player.friction;
+            // Transition to Final Stage Card
+            setTimeout(() => {
+                const s2 = document.getElementById('stage2');
+                const s3 = document.getElementById('stage3');
 
-            player.x += player.vx;
-            player.y += player.vy;
-
-            const lvl = levels[currentLevelIndex];
-
-            // 1. Wall Collisions
-            lvl.walls.forEach(w => {
-                const wx = w.x * canvasWidth;
-                const wy = w.y * canvasHeight;
-                const ww = w.w * canvasWidth;
-                const wh = w.h * canvasHeight;
-
-                // Find closest point on wall rectangle to player center
-                const closestX = Math.max(wx, Math.min(player.x, wx + ww));
-                const closestY = Math.max(wy, Math.min(player.y, wy + wh));
-
-                const distX = player.x - closestX;
-                const distY = player.y - closestY;
-                const distanceSq = (distX * distX) + (distY * distY);
-
-                if (distanceSq < (player.radius * player.radius)) {
-                    // Collision detected! Bounce back lightly & produce sound
-                    const distance = Math.sqrt(distanceSq) || 0.001;
-                    const overlap = player.radius - distance;
-                    const nx = distX / distance;
-                    const ny = distY / distance;
-
-                    player.x += nx * overlap;
-                    player.y += ny * overlap;
-
-                    // Bounce velocity
-                    player.vx *= -0.5;
-                    player.vy *= -0.5;
-
-                    soundFX.playBounce();
-                }
-            });
-
-            // Time factor for animated obstacles
-            const now = Date.now() * 0.0015;
-
-            // 2. Laser Collisions
-            if (lvl.lasers) {
-                lvl.lasers.forEach(laser => {
-                    const lx1 = laser.x1 * canvasWidth;
-                    const ly1 = laser.y1 * canvasHeight;
-                    const lx2 = laser.x2 * canvasWidth;
-                    const ly2 = laser.y2 * canvasHeight;
-
-                    // Oscillating laser pulse position
-                    const factor = (Math.sin(now * laser.speed + laser.offset) + 1) / 2;
-                    const curX = lx1 + (lx2 - lx1) * factor;
-                    const curY = ly1 + (ly2 - ly1) * factor;
-
-                    // Laser node radius
-                    const nodeRadius = 10;
-                    const dx = player.x - curX;
-                    const dy = player.y - curY;
-                    if (Math.sqrt(dx * dx + dy * dy) < player.radius + nodeRadius) {
-                        triggerCrash();
-                    }
-                });
-            }
-
-            // 3. Rotating Spiked Gears
-            if (lvl.gears) {
-                lvl.gears.forEach(gear => {
-                    const gx = gear.x * canvasWidth;
-                    const gy = gear.y * canvasHeight;
-                    const gRadius = gear.radius * canvasWidth;
-
-                    const dx = player.x - gx;
-                    const dy = player.y - gy;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < player.radius + gRadius) {
-                        triggerCrash();
-                    }
-                });
-            }
-
-            // 4. Goal Zone Collision Check
-            const gx = lvl.goal.x * canvasWidth;
-            const gy = lvl.goal.y * canvasHeight;
-            const gRadius = lvl.goal.radius;
-
-            const dx = player.x - gx;
-            const dy = player.y - gy;
-            const distToGoal = Math.sqrt(dx * dx + dy * dy);
-
-            if (distToGoal < player.radius + gRadius) {
-                // Stage Cleared!
-                soundFX.playWin();
-                spawnParticles(gx, gy, '#ec4899', 30);
-
-                if (currentLevelIndex < levels.length - 1) {
-                    loadLevel(currentLevelIndex + 1);
-                } else {
-                    // BEAT THE GAME! SHOW HEART WIN SCREEN
-                    isGameWon = true;
-                    spawnHeartConfetti();
-                    winModal.classList.remove('opacity-0', 'pointer-events-none', 'scale-90');
-                    winModal.classList.add('opacity-100', 'scale-100');
-                }
-            }
+                s2.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                setTimeout(() => {
+                    s2.classList.add('hidden');
+                    s3.classList.remove('opacity-0', 'pointer-events-none', 'scale-90');
+                    s3.classList.add('opacity-100', 'scale-100');
+                    // Explosion of celebration heart particles
+                    spawnBurst(window.innerWidth / 2, window.innerHeight / 2, 25, 'heart');
+                    spawnBurst(window.innerWidth / 2, window.innerHeight / 2, 15, 'sparkle');
+                }, 400);
+            }, 900);
         }
 
-        /* ====================================================================
-           10. RENDER ENGINE (60 FPS Canvas Aesthetics)
-           ==================================================================== */
-        function render() {
-            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-            const lvl = levels[currentLevelIndex];
-            const time = Date.now() * 0.002;
-
-            // A. Draw Goal Zone
-            const gx = lvl.goal.x * canvasWidth;
-            const gy = lvl.goal.y * canvasHeight;
-            const gRadius = lvl.goal.radius;
-
-            // Pulsing Goal Glow
-            const pulse = Math.sin(time * 3) * 4;
-            const goalGrad = ctx.createRadialGradient(gx, gy, 2, gx, gy, gRadius + pulse + 8);
-            goalGrad.addColorStop(0, 'rgba(236, 72, 153, 0.9)');
-            goalGrad.addColorStop(0.6, 'rgba(236, 72, 153, 0.4)');
-            goalGrad.addColorStop(1, 'rgba(236, 72, 153, 0)');
-
-            ctx.fillStyle = goalGrad;
-            ctx.beginPath();
-            ctx.arc(gx, gy, gRadius + pulse + 8, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = '#ec4899';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.arc(gx, gy, gRadius, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Inner Goal Heart Indicator
-            ctx.fillStyle = '#f43f5e';
-            ctx.font = '14px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('❤️', gx, gy);
-
-            // B. Draw Walls
-            ctx.fillStyle = '#1e293b';
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2;
-
-            lvl.walls.forEach(w => {
-                const wx = w.x * canvasWidth;
-                const wy = w.y * canvasHeight;
-                const ww = w.w * canvasWidth;
-                const wh = w.h * canvasHeight;
-
-                ctx.beginPath();
-                ctx.roundRect(wx, wy, ww, wh, 6);
-                ctx.fill();
-                ctx.stroke();
-            });
-
-            // C. Draw Dynamic Lasers
-            if (lvl.lasers) {
-                lvl.lasers.forEach(laser => {
-                    const lx1 = laser.x1 * canvasWidth;
-                    const ly1 = laser.y1 * canvasHeight;
-                    const lx2 = laser.x2 * canvasWidth;
-                    const ly2 = laser.y2 * canvasHeight;
-
-                    // Track guide line
-                    ctx.strokeStyle = 'rgba(239, 68, 68, 0.2)';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(lx1, ly1);
-                    ctx.lineTo(lx2, ly2);
-                    ctx.stroke();
-
-                    // Moving Laser Node
-                    const factor = (Math.sin(time * laser.speed * 0.75 + laser.offset) + 1) / 2;
-                    const curX = lx1 + (lx2 - lx1) * factor;
-                    const curY = ly1 + (ly2 - ly1) * factor;
-
-                    // Laser Glow
-                    const lGlow = ctx.createRadialGradient(curX, curY, 1, curX, curY, 16);
-                    lGlow.addColorStop(0, '#f43f5e');
-                    lGlow.addColorStop(1, 'rgba(244, 63, 94, 0)');
-
-                    ctx.fillStyle = lGlow;
-                    ctx.beginPath();
-                    ctx.arc(curX, curY, 16, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    ctx.fillStyle = '#ffffff';
-                    ctx.beginPath();
-                    ctx.arc(curX, curY, 6, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-            }
-
-            // D. Draw Rotating Gears
-            if (lvl.gears) {
-                lvl.gears.forEach(gear => {
-                    const gx = gear.x * canvasWidth;
-                    const gy = gear.y * canvasHeight;
-                    const gRadius = gear.radius * canvasWidth;
-                    const rotation = time * gear.speed * 40;
-
-                    ctx.save();
-                    ctx.translate(gx, gy);
-                    ctx.rotate(rotation);
-
-                    ctx.fillStyle = '#e11d48';
-                    ctx.strokeStyle = '#fda4af';
-                    ctx.lineWidth = 2;
-
-                    // Draw spiked gear
-                    ctx.beginPath();
-                    const spikes = 8;
-                    for (let i = 0; i < spikes; i++) {
-                        const angle = (i / spikes) * Math.PI * 2;
-                        const outerX = Math.cos(angle) * (gRadius + 4);
-                        const outerY = Math.sin(angle) * (gRadius + 4);
-                        const innerX = Math.cos(angle + 0.2) * (gRadius - 6);
-                        const innerY = Math.sin(angle + 0.2) * (gRadius - 6);
-
-                        if (i === 0) ctx.moveTo(outerX, outerY);
-                        else ctx.lineTo(outerX, outerY);
-                        ctx.lineTo(innerX, innerY);
-                    }
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.stroke();
-                    ctx.restore();
-                });
-            }
-
-            // E. Draw Drag Joystick Indicator
-            if (touchStartPos && touchCurrentPos) {
-                ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(touchStartPos.x, touchStartPos.y, 30, 0, Math.PI * 2);
-                ctx.stroke();
-
-                ctx.fillStyle = 'rgba(6, 182, 212, 0.6)';
-                ctx.beginPath();
-                ctx.arc(touchCurrentPos.x, touchCurrentPos.y, 12, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            // F. Draw Particles
-            drawParticles();
-
-            // G. Draw Player Ball
-            if (!isGameOver) {
-                // Ball Outer Neon Glow
-                const playerGlow = ctx.createRadialGradient(player.x, player.y, 2, player.x, player.y, player.radius + 10);
-                playerGlow.addColorStop(0, 'rgba(6, 182, 212, 0.8)');
-                playerGlow.addColorStop(1, 'rgba(6, 182, 212, 0)');
-
-                ctx.fillStyle = playerGlow;
-                ctx.beginPath();
-                ctx.arc(player.x, player.y, player.radius + 10, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Core Ball
-                ctx.fillStyle = '#67e8f9';
-                ctx.beginPath();
-                ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
+        /* Reaction Buttons Logic */
+        function triggerHugs(e) {
+            playCuteSound('hug');
+            const rect = e.target.getBoundingClientRect();
+            spawnBurst(rect.left + rect.width / 2, rect.top, 12, 'heart');
         }
 
-        /* ====================================================================
-           11. MAIN GAME LOOP
-           ==================================================================== */
-        function gameLoop() {
-            updatePhysics();
-            updateParticles();
-            render();
-            requestAnimationFrame(gameLoop);
+        function triggerSparkles(e) {
+            playCuteSound('chime');
+            const rect = e.target.getBoundingClientRect();
+            spawnBurst(rect.left + rect.width / 2, rect.top, 15, 'sparkle');
         }
-
-        /* ====================================================================
-           12. UI BUTTON HANDLERS & LISTENERS
-           ==================================================================== */
-        document.getElementById('restart-btn').addEventListener('click', () => {
-            soundFX.init();
-            loadLevel(currentLevelIndex);
-        });
-
-        document.getElementById('sound-btn').addEventListener('click', () => {
-            soundFX.enabled = !soundFX.enabled;
-            document.getElementById('sound-icon-on').classList.toggle('hidden', !soundFX.enabled);
-            document.getElementById('sound-icon-off').classList.toggle('hidden', soundFX.enabled);
-            if (soundFX.enabled) soundFX.init();
-        });
-
-        document.getElementById('play-again-btn').addEventListener('click', () => {
-            soundFX.init();
-            winModal.classList.add('opacity-0', 'pointer-events-none', 'scale-90');
-            winModal.classList.remove('opacity-100', 'scale-100');
-            isGameWon = false;
-            loadLevel(0);
-        });
-
-        // Initialize and setup dimensions on launch
-        window.addEventListener('load', () => {
-            resizeCanvas();
-            loadLevel(0);
-            gameLoop();
-        });
-
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('orientationchange', () => {
-            setTimeout(resizeCanvas, 200);
-        });
     </script>
 </body>
 </html>
