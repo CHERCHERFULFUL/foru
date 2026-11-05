@@ -1,35 +1,569 @@
-🌙
-MOONPETAL QUEST
-A TINY RESCUE RPG
-✦ A LITTLE ADVENTURE AWAITS ✦
-Find the Moonlight to Save a Friend
-A brave heart, five curious challenges, and three grumpy creatures stand between one girl and the boy she promised to bring home.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Claw's Rescue - A Cozy RPG</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Quicksand for cozy aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fce7f3;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.85; }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 2s ease-in-out infinite;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between p-4 bg-gradient-to-b from-pink-50 via-purple-50 to-indigo-50 text-slate-700">
 
+    <!-- Mobile Device Container Wrapper -->
+    <div id="game-container" class="w-full max-w-md bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-200 flex flex-col justify-between overflow-hidden relative" style="height: 88vh; max-height: 840px;">
+        
+        <!-- Top Status Bar (Hidden on Title Screen) -->
+        <header id="status-bar" class="hidden bg-pink-100/80 px-4 py-3 border-b-2 border-pink-200 flex items-center justify-between z-10">
+            <div class="flex items-center space-x-2">
+                <div class="w-9 h-9 rounded-full bg-pink-300 border-2 border-pink-400 flex items-center justify-center text-white font-bold shadow-sm" id="avatar-preview-small">
+                    👧🏽
+                </div>
+                <div>
+                    <h1 id="player-name-display" class="font-bold text-sm text-pink-900 leading-tight">Hero</h1>
+                    <div class="flex items-center space-x-1">
+                        <span class="text-xs text-pink-600 font-semibold">HP:</span>
+                        <div class="w-20 bg-pink-200 h-2.5 rounded-full overflow-hidden">
+                            <div id="hp-bar" class="bg-emerald-400 h-full w-full transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white/80 px-3 py-1 rounded-full border border-pink-300 text-xs font-bold text-pink-700 shadow-xs" id="stage-badge">
+                Stage 1/8
+            </div>
+        </header>
 
+        <!-- Main Dynamic Screen Content Area -->
+        <main id="main-content" class="flex-1 overflow-y-auto p-5 flex flex-col justify-center items-center text-center relative">
+            
+            <!-- 1. TITLE SCREEN -->
+            <section id="screen-title" class="w-full flex flex-col items-center justify-center space-y-5 animate-float">
+                <div class="relative">
+                    <!-- Cute Character Duo Illustration SVG -->
+                    <svg class="w-40 h-40 drop-shadow-md" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Girl (Light skin, dark hair, dark eyes) -->
+                        <circle cx="70" cy="100" r="35" fill="#fbcfe8"/>
+                        <!-- Dark hair -->
+                        <path d="M38 95 C35 70, 105 70, 102 95 C105 125, 35 125, 38 95 Z" fill="#332211"/>
+                        <!-- Light face -->
+                        <circle cx="70" cy="105" r="24" fill="#ffedd5"/>
+                        <!-- Dark eyes -->
+                        <circle cx="62" cy="103" r="3" fill="#1e1b4b"/>
+                        <circle cx="78" cy="103" r="3" fill="#1e1b4b"/>
+                        <!-- Smile -->
+                        <path d="M67 115 Q70 119 73 115" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="56" cy="110" r="3" fill="#fda4af" opacity="0.6"/>
+                        <circle cx="84" cy="110" r="3" fill="#fda4af" opacity="0.6"/>
 
+                        <!-- Claw (Tan skin, dark hair, dark eyes) -->
+                        <circle cx="135" cy="100" r="35" fill="#fed7aa"/>
+                        <!-- Dark hair -->
+                        <path d="M103 95 C100 65, 170 65, 167 95 C170 120, 100 120, 103 95 Z" fill="#1f150d"/>
+                        <!-- Tan face -->
+                        <circle cx="135" cy="105" r="24" fill="#fcd34d"/>
+                        <!-- Dark eyes -->
+                        <circle cx="127" cy="103" r="3" fill="#1e1b4b"/>
+                        <circle cx="143" cy="103" r="3" fill="#1e1b4b"/>
+                        <!-- Smile -->
+                        <path d="M132 115 Q135 119 138 115" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="122" cy="110" r="3" fill="#f59e0b" opacity="0.6"/>
+                        <circle cx="148" cy="110" r="3" fill="#f59e0b" opacity="0.6"/>
 
+                        <!-- Floating Heart -->
+                        <path d="M100 45 C90 30, 70 40, 85 60 L100 75 L115 60 C130 40, 110 30, 100 45 Z" fill="#f43f5e" class="animate-pulse-soft"/>
+                    </svg>
+                </div>
 
+                <div>
+                    <h2 class="text-2xl font-bold text-pink-700 tracking-wide">Claw's Rescue</h2>
+                    <p class="text-xs text-pink-500 mt-1">A cozy magical journey to save your dear friend!</p>
+                </div>
 
+                <div class="w-full space-y-3 bg-pink-50/80 p-4 rounded-2xl border border-pink-200">
+                    <label for="hero-name-input" class="block text-xs font-bold text-pink-800 uppercase tracking-wider">Enter Your Name (Hero):</label>
+                    <input type="text" id="hero-name-input" placeholder="e.g. Luna" maxlength="12" class="w-full px-4 py-3 bg-white border-2 border-pink-300 rounded-xl text-center font-bold text-pink-900 focus:outline-none focus:border-pink-500 shadow-inner text-base">
+                    <button onclick="startGame()" class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:from-pink-600 hover:to-rose-600 active:scale-95 transition transform text-base flex items-center justify-center space-x-2">
+                        <span>✨ Start Adventure ✨</span>
+                    </button>
+                </div>
+            </section>
 
+            <!-- 2. GAMEPLAY SCREEN (Dynamic per Stage) -->
+            <section id="screen-game" class="hidden w-full h-full flex flex-col justify-between items-center py-2">
+                <!-- Visual / Story Card -->
+                <div id="stage-card" class="w-full bg-pink-50/60 border border-pink-200 rounded-2xl p-4 flex flex-col items-center shadow-sm">
+                    <div id="stage-illustration" class="mb-3">
+                        <!-- Dynamic Illustration / Avatar / Enemy -->
+                    </div>
+                    <h3 id="stage-title" class="font-bold text-base text-pink-900">Challenge Title</h3>
+                    <p id="stage-desc" class="text-xs text-slate-600 mt-1 px-2 leading-relaxed">Description of the current challenge or enemy encounter goes here.</p>
+                </div>
 
+                <!-- Interactive Zone (Challenge Options or Boss Battle Controls) -->
+                <div id="interactive-zone" class="w-full my-3 flex-1 flex flex-col justify-center items-center space-y-2.5">
+                    <!-- Dynamic buttons / inputs injected here via JS -->
+                </div>
 
+                <!-- Combat / Feedback Log -->
+                <div id="combat-log" class="w-full bg-slate-100 rounded-xl p-2.5 text-xs text-slate-600 border border-slate-200 h-16 flex items-center justify-center text-center italic overflow-hidden">
+                    Ready for your next step! Tap your choice above.
+                </div>
+            </section>
 
+            <!-- 3. VICTORY SCREEN -->
+            <section id="screen-victory" class="hidden w-full flex flex-col items-center justify-center space-y-4">
+                <div class="animate-float">
+                    <svg class="w-36 h-36" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Reunited Girl & Claw -->
+                        <circle cx="80" cy="100" r="35" fill="#fbcfe8"/>
+                        <path d="M50 95 C47 75, 110 75, 107 95 C110 120, 47 120, 50 95 Z" fill="#332211"/>
+                        <circle cx="80" cy="105" r="24" fill="#ffedd5"/>
+                        <circle cx="73" cy="103" r="3" fill="#1e1b4b"/>
+                        <circle cx="87" cy="103" r="3" fill="#1e1b4b"/>
+                        <path d="M76 114 Q80 118 84 114" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round"/>
 
-Your heroine
-Light skin · dark hair · dark eyes
+                        <!-- Claw (Tan skin, dark hair, dark eyes) -->
+                        <circle cx="130" cy="100" r="35" fill="#fed7aa"/>
+                        <path d="M100 95 C97 70, 160 70, 157 95 C160 120, 97 120, 100 95 Z" fill="#1f150d"/>
+                        <circle cx="130" cy="105" r="24" fill="#fcd34d"/>
+                        <circle cx="123" cy="103" r="3" fill="#1e1b4b"/>
+                        <circle cx="137" cy="103" r="3" fill="#1e1b4b"/>
+                        <path d="M126 114 Q130 118 134 114" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round"/>
 
+                        <path d="M105 50 C95 35, 75 45, 90 65 L105 80 L120 65 C135 45, 115 35, 105 50 Z" fill="#f43f5e" class="animate-pulse-soft"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-pink-700">Claw is Saved! 🎉</h2>
+                    <p id="victory-message" class="text-xs text-slate-600 mt-2 px-4 leading-relaxed">
+                        Together, you and Claw defeated the shadows and restored warmth to the valley. Cozy days await!
+                    </p>
+                </div>
+                <button onclick="resetGame()" class="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:opacity-95 active:scale-95 transition text-base">
+                    🌸 Play Again 🌸
+                </button>
+            </section>
 
+        </main>
 
+        <!-- Footer Navigation / Info -->
+        <footer class="bg-pink-50/80 px-4 py-2 border-t-2 border-pink-200 text-center text-[10px] text-pink-500 font-semibold z-10">
+            Cozy Mobile RPG • Optimized for iPhone Safari
+        </footer>
 
+    </div>
 
+    <!-- Custom Modal Popup (No alert/confirm used) -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-2xl p-5 max-w-xs w-full shadow-2xl border-2 border-pink-300 text-center animate-pulse-soft">
+            <h3 id="modal-title" class="text-lg font-bold text-pink-800 mb-1">Notice</h3>
+            <p id="modal-text" class="text-xs text-slate-600 mb-4 leading-relaxed">Message goes here.</p>
+            <button onclick="closeModal()" class="w-full bg-pink-500 text-white font-bold py-2.5 rounded-xl shadow hover:bg-pink-600 transition text-sm">
+                Got it! ✨
+            </button>
+        </div>
+    </div>
 
+    <script>
+        // Game State Variables
+        let gameState = {
+            heroName: "Hero",
+            hp: 100,
+            maxHp: 100,
+            currentStageIndex: 0
+        };
 
+        // Stages Definition (5 Challenges + 3 Enemy Bosses = 8 stages total)
+        const stages = [
+            {
+                type: "challenge",
+                title: "1. The Whispering Forest Gate",
+                desc: "A magical vine gate blocks your path. To open it, you must answer the guardian spirit's riddle correctly.",
+                question: "What warmth follows every chilly winter storm?",
+                options: [
+                    { text: "Spring Sunshine ☀️", correct: true, feedback: "Correct! The vines happily bloom and part the way." },
+                    { text: "A heavy snow storm ❄️", correct: false, feedback: "Incorrect! The vines tighten slightly, causing 10 damage." },
+                    { text: "Dark thunderstorms ⚡", correct: false, feedback: "Incorrect! That's not quite right, you take 10 damage." }
+                ]
+            },
+            {
+                type: "challenge",
+                title: "2. The Glowing Runes",
+                desc: "Ancient glowing runes block the bridge. Tap them in the correct sequence of pastel colors to safely cross.",
+                sequence: ["Pink 🌸", "Lavender 💜", "Mint 🍃"],
+                currentStep: 0,
+                options: [
+                    { text: "Pink 🌸", val: "Pink 🌸" },
+                    { text: "Lavender 💜", val: "Lavender 💜" },
+                    { text: "Mint 🍃", val: "Mint 🍃" }
+                ]
+            },
+            {
+                type: "boss",
+                title: "Boss 1: Shadow Imp 😈",
+                desc: "A mischievous shadow imp stands guard over the valley pass, trying to trick you!",
+                enemyName: "Shadow Imp",
+                enemyHp: 40,
+                enemyMaxHp: 40,
+                enemyAttack: 12
+            },
+            {
+                type: "challenge",
+                title: "3. The Whispering Stream",
+                desc: "You reach a bubbling stream of starlight water. How do you cross without getting your boots soaked?",
+                options: [
+                    { text: "Hop across the glowing stepping stones 🪨", correct: true, feedback: "Perfect! You crossed safely and dry." },
+                    { text: "Wade straight through the middle 🌊", correct: false, feedback: "Brr! The cold water chills you (-15 HP)." },
+                    { text: "Build a clumsy wooden raft 🪵", correct: false, feedback: "It tips over and you bump your knee (-15 HP)." }
+                ]
+            },
+            {
+                type: "boss",
+                title: "Boss 2: Frost Golem 🧊",
+                desc: "A chilly golem blocks the entrance to the Crystal Cavern where Claw is trapped!",
+                enemyName: "Frost Golem",
+                enemyHp: 65,
+                enemyMaxHp: 65,
+                enemyAttack: 15
+            },
+            {
+                type: "challenge",
+                title: "4. The Alchemist's Brew",
+                desc: "A sleeping potion is needed to bypass the cave guard. Select the correct cozy ingredient!",
+                question: "Which ingredient creates sweet slumber?",
+                options: [
+                    { text: "Starlight Honey 🍯", correct: true, feedback: "Wonderful! The guard drifts into peaceful sleep." },
+                    { text: "Spicy Pepper 🌶️", correct: false, feedback: "Ouch! That woke everyone up instead (-10 HP)." },
+                    { text: "Sour Lemon Juice 🍋", correct: false, feedback: "Too sour! It makes you pucker up (-10 HP)." }
+                ]
+            },
+            {
+                type: "challenge",
+                title: "5. The Crystal Lock",
+                desc: "Claw's prison door has a crystal keypad. Tap the buttons in rhythmic harmony to unlock it!",
+                targetTaps: 4,
+                currentTaps: 0
+            },
+            {
+                type: "boss",
+                title: "Final Boss: Shadow Guardian 🛡️",
+                desc: "The supreme guardian of darkness stands between you and Claw. Defeat it to rescue Claw!",
+                enemyName: "Shadow Guardian",
+                enemyHp: 90,
+                enemyMaxHp: 90,
+                enemyAttack: 18
+            }
+        ];
 
+        // UI Helpers
+        function showModal(title, text) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
 
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
 
+        function updateHPBar() {
+            const pct = Math.max(0, (gameState.hp / gameState.maxHp) * 100);
+            const bar = document.getElementById('hp-bar');
+            bar.style.width = pct + '%';
+            if (pct > 50) {
+                bar.className = "bg-emerald-400 h-full transition-all duration-300";
+            } else if (pct > 25) {
+                bar.className = "bg-amber-400 h-full transition-all duration-300";
+            } else {
+                bar.className = "bg-rose-500 h-full transition-all duration-300";
+            }
+        }
 
-Claw
-Tan skin · dark hair · dark eyes
-What is the girl's name?
-Begin the adventure ✨
-Made of stardust, courage, and a suspicious amount of glitter.
+        // Start Game
+        function startGame() {
+            const nameInput = document.getElementById('hero-name-input').value.trim();
+            if (!nameInput) {
+                showModal("Name Required", "Please enter your hero's name to start your adventure!");
+                return;
+            }
+            gameState.heroName = nameInput;
+            gameState.hp = 100;
+            gameState.currentStageIndex = 0;
+
+            document.getElementById('player-name-display').innerText = gameState.heroName;
+            document.getElementById('avatar-preview-small').innerHTML = "👧🏽";
+
+            // Switch screens
+            document.getElementById('screen-title').classList.add('hidden');
+            document.getElementById('status-bar').classList.remove('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+
+            loadStage();
+        }
+
+        // Load Current Stage
+        function loadStage() {
+            if (gameState.currentStageIndex >= stages.length) {
+                triggerVictory();
+                return;
+            }
+
+            const stage = stages[gameState.currentStageIndex];
+            document.getElementById('stage-badge').innerText = `Stage ${gameState.currentStageIndex + 1}/8`;
+            document.getElementById('stage-title').innerText = stage.title;
+            document.getElementById('stage-desc').innerText = stage.desc;
+
+            const illustration = document.getElementById('stage-illustration');
+            const interactiveZone = document.getElementById('interactive-zone');
+            interactiveZone.innerHTML = '';
+            document.getElementById('combat-log').innerText = "Make your move!";
+
+            // Render stage specific graphics and controls
+            if (stage.type === 'challenge') {
+                if (gameState.currentStageIndex === 1) {
+                    // Rune Sequence Challenge
+                    stage.currentStep = 0;
+                    illustration.innerHTML = `<div class='text-2xl'>🌸 💜 🍃</div>`;
+                    let infoP = document.createElement('p');
+                    infoP.className = "text-xs font-bold text-pink-600 mb-2";
+                    infoP.innerText = `Target Sequence: Pink ➔ Lavender ➔ Mint (Step 1)`;
+                    infoP.id = 'rune-status';
+                    interactiveZone.appendChild(infoP);
+
+                    let btnContainer = document.createElement('div');
+                    btnContainer.className = "grid grid-cols-3 gap-2 w-full";
+                    stage.options.forEach(opt => {
+                        let btn = document.createElement('button');
+                        btn.className = "bg-pink-100 border-2 border-pink-300 hover:bg-pink-200 text-pink-800 font-bold py-3 rounded-xl text-xs shadow-xs active:scale-95 transition";
+                        btn.innerText = opt.text;
+                        btn.onclick = () => handleRuneClick(opt.val);
+                        btnContainer.appendChild(btn);
+                    });
+                    interactiveZone.appendChild(btnContainer);
+                } else if (gameState.currentStageIndex === 6) {
+                    // Crystal Lock Rhythm Tap
+                    stage.currentTaps = 0;
+                    illustration.innerHTML = `<div class='text-3xl'>🔒✨</div>`;
+                    let tapBtn = document.createElement('button');
+                    tapBtn.className = "w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 rounded-xl shadow-md text-base active:scale-95 transition";
+                    tapBtn.innerText = `Tap to Unlock (0/${stage.targetTaps})`;
+                    tapBtn.onclick = () => handleCrystalTap(tapBtn);
+                    interactiveZone.appendChild(tapBtn);
+                } else {
+                    // Standard Riddle / Choice Challenge
+                    illustration.innerHTML = `<div class='text-3xl'>📜✨</div>`;
+                    let btnContainer = document.createElement('div');
+                    btnContainer.className = "w-full space-y-2";
+                    stage.options.forEach((opt, idx) => {
+                        let btn = document.createElement('button');
+                        btn.className = "w-full bg-pink-50 border-2 border-pink-200 hover:bg-pink-100 text-pink-900 font-semibold py-3 px-4 rounded-xl text-xs text-left shadow-xs active:scale-95 transition flex items-center justify-between";
+                        btn.innerHTML = `<span>${opt.text}</span><span>➔</span>`;
+                        btn.onclick = () => handleChoice(opt.correct, opt.feedback);
+                        btnContainer.appendChild(btn);
+                    });
+                    interactiveZone.appendChild(btnContainer);
+                }
+            } else if (stage.type === 'boss') {
+                // Boss Battle UI
+                illustration.innerHTML = `
+                    <div class="flex flex-col items-center">
+                        <div class="text-3xl mb-1">${stage.enemyName.includes('Imp') ? '😈' : stage.enemyName.includes('Golem') ? '🧊' : '🛡️'}</div>
+                        <div class="text-xs font-bold text-rose-700">${stage.enemyName}</div>
+                        <div class="w-32 bg-rose-100 h-2 rounded-full overflow-hidden mt-1 border border-rose-300">
+                            <div id="enemy-hp-bar" class="bg-rose-500 h-full w-full transition-all"></div>
+                        </div>
+                        <span id="enemy-hp-text" class="text-[10px] text-rose-600 mt-0.5">${stage.enemyHp}/${stage.enemyMaxHp} HP</span>
+                    </div>
+                `;
+
+                let actionContainer = document.createElement('div');
+                actionContainer.className = "grid grid-cols-2 gap-2 w-full";
+                
+                let attackBtn = document.createElement('button');
+                attackBtn.className = "bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 rounded-xl shadow text-xs active:scale-95 transition";
+                attackBtn.innerText = "⚔️ Cozy Slash";
+                attackBtn.onclick = () => handleBossAction('attack');
+
+                let healBtn = document.createElement('button');
+                healBtn.className = "bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl shadow text-xs active:scale-95 transition";
+                healBtn.innerText = "🍵 Herbal Tea (+20 HP)";
+                healBtn.onclick = () => handleBossAction('heal');
+
+                actionContainer.appendChild(attackBtn);
+                actionContainer.appendChild(healBtn);
+                interactiveZone.appendChild(actionContainer);
+            }
+        }
+
+        // Challenge Handlers
+        function handleChoice(isCorrect, feedback) {
+            const log = document.getElementById('combat-log');
+            if (isCorrect) {
+                log.innerText = feedback;
+                log.className = "w-full bg-emerald-50 rounded-xl p-2.5 text-xs text-emerald-700 border border-emerald-200 flex items-center justify-center text-center font-semibold";
+                setTimeout(() => {
+                    gameState.currentStageIndex++;
+                    loadStage();
+                }, 1400);
+            } else {
+                gameState.hp -= 15;
+                updateHPBar();
+                log.innerText = feedback;
+                log.className = "w-full bg-rose-50 rounded-xl p-2.5 text-xs text-rose-700 border border-rose-200 flex items-center justify-center text-center font-semibold";
+                checkGameOver();
+            }
+        }
+
+        function handleRuneClick(val) {
+            const stage = stages[gameState.currentStageIndex];
+            const log = document.getElementById('combat-log');
+            const status = document.getElementById('rune-status');
+
+            if (val === stage.sequence[stage.currentStep]) {
+                stage.currentStep++;
+                if (stage.currentStep >= stage.sequence.length) {
+                    log.innerText = "Wonderful! The glowing rune bridge solidifies completely.";
+                    log.className = "w-full bg-emerald-50 rounded-xl p-2.5 text-xs text-emerald-700 border border-emerald-200 flex items-center justify-center text-center font-semibold";
+                    setTimeout(() => {
+                        gameState.currentStageIndex++;
+                        loadStage();
+                    }, 1400);
+                } else {
+                    status.innerText = `Target Sequence: Pink ➔ Lavender ➔ Mint (Step ${stage.currentStep + 1})`;
+                    log.innerText = "Correct rune! Keep going...";
+                }
+            } else {
+                gameState.hp -= 10;
+                updateHPBar();
+                stage.currentStep = 0;
+                status.innerText = `Target Sequence: Pink ➔ Lavender ➔ Mint (Step 1)`;
+                log.innerText = "Wrong rune sequence! Resetting sequence (-10 HP).";
+                log.className = "w-full bg-rose-50 rounded-xl p-2.5 text-xs text-rose-700 border border-rose-200 flex items-center justify-center text-center font-semibold";
+                checkGameOver();
+            }
+        }
+
+        function handleCrystalTap(btn) {
+            const stage = stages[gameState.currentStageIndex];
+            stage.currentTaps++;
+            btn.innerText = `Tap to Unlock (${stage.currentTaps}/${stage.targetTaps})`;
+            
+            if (stage.currentTaps >= stage.targetTaps) {
+                document.getElementById('combat-log').innerText = "Click! The crystal lock springs open successfully.";
+                document.getElementById('combat-log').className = "w-full bg-emerald-50 rounded-xl p-2.5 text-xs text-emerald-700 border border-emerald-200 flex items-center justify-center text-center font-semibold";
+                setTimeout(() => {
+                    gameState.currentStageIndex++;
+                    loadStage();
+                }, 1400);
+            }
+        }
+
+        // Boss Battle Logic
+        function handleBossAction(action) {
+            const stage = stages[gameState.currentStageIndex];
+            const log = document.getElementById('combat-log');
+
+            if (action === 'attack') {
+                const damageDealt = Math.floor(Math.random() * 12) + 14;
+                stage.enemyHp -= damageDealt;
+                log.innerText = `${gameState.heroName} deals ${damageDealt} cozy damage to ${stage.enemyName}!`;
+            } else if (action === 'heal') {
+                gameState.hp = Math.min(gameState.maxHp, gameState.hp + 20);
+                updateHPBar();
+                log.innerText = `${gameState.heroName} sips herbal tea and recovers 20 HP!`;
+            }
+
+            // Update Enemy HP bar
+            if (stage.enemyHp < 0) stage.enemyHp = 0;
+            const enemyPct = (stage.enemyHp / stage.enemyMaxHp) * 100;
+            const enemyBar = document.getElementById('enemy-hp-bar');
+            if (enemyBar) {
+                enemyBar.style.width = enemyPct + '%';
+                document.getElementById('enemy-hp-text').innerText = `${stage.enemyHp}/${stage.enemyMaxHp} HP`;
+            }
+
+            if (stage.enemyHp <= 0) {
+                log.innerText = `${stage.enemyName} is defeated with kindness and bravery!`;
+                log.className = "w-full bg-emerald-50 rounded-xl p-2.5 text-xs text-emerald-700 border border-emerald-200 flex items-center justify-center text-center font-semibold";
+                setTimeout(() => {
+                    gameState.currentStageIndex++;
+                    loadStage();
+                }, 1600);
+                return;
+            }
+
+            // Boss Counter Attack
+            setTimeout(() => {
+                if (gameState.currentStageIndex >= stages.length) return;
+                const bossDamage = stage.enemyAttack + Math.floor(Math.random() * 5);
+                gameState.hp -= bossDamage;
+                updateHPBar();
+                log.innerText = `${stage.enemyName} strikes back for ${bossDamage} damage!`;
+                checkGameOver();
+            }, 800);
+        }
+
+        function checkGameOver() {
+            if (gameState.hp <= 0) {
+                showModal("Oh no!", `${gameState.heroName} ran out of energy. Take a short rest and try again!`);
+                resetGame();
+            }
+        }
+
+        // Victory Screen
+        function triggerVictory() {
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('status-bar').classList.add('hidden');
+            document.getElementById('screen-victory').classList.remove('hidden');
+            document.getElementById('victory-message').innerText = `You and Claw are finally reunited! Claw (with his tan skin, dark hair, and dark eyes) hugs ${gameState.heroName} tightly. Thanks to your courage through all 5 challenges and 3 boss battles, peace is restored!`;
+        }
+
+        // Reset Game
+        function resetGame() {
+            document.getElementById('screen-victory').classList.add('hidden');
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('status-bar').classList.add('hidden');
+            document.getElementById('screen-title').classList.remove('hidden');
+            document.getElementById('hero-name-input').value = "";
+            gameState.hp = 100;
+            gameState.currentStageIndex = 0;
+            updateHPBar();
+        }
+    </script>
+</body>
+</html>
